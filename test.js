@@ -1,30 +1,45 @@
-function calculator() {
-    const operator = prompt('Enter operator ( +, -, *, / ): ');
+// FILEPATH: /workspaces/skills-copilot-codespaces-vscode/test.js
+const calculator = require('./calculator'); // assuming your calculator function is exported from a file named calculator.js
 
-    const number1 = parseFloat(prompt('Enter first number: '));
-    const number2 = parseFloat(prompt('Enter second number: '));
+describe('Calculator', () => {
+    beforeEach(() => {
+        window.alert = jest.fn();
+        window.prompt = jest.fn();
+    });
 
-    let result;
+    it('adds two numbers correctly', () => {
+        window.prompt.mockReturnValueOnce('+').mockReturnValueOnce('5').mockReturnValueOnce('3');
+        calculator();
+        expect(window.alert).toHaveBeenCalledWith('The result is 8');
+    });
 
-    if (operator == '+') {
-        result = number1 + number2;
-    } else if (operator == '-') {
-        result = number1 - number2;
-    } else if (operator == '*') {
-        result = number1 * number2;
-    } else if (operator == '/') {
-        if (number2 != 0) {
-            result = number1 / number2;
-        } else {
-            alert("You can't divide by zero!");
-            return;
-        }
-    } else {
-        alert('Invalid operator');
-        return;
-    }
+    it('subtracts two numbers correctly', () => {
+        window.prompt.mockReturnValueOnce('-').mockReturnValueOnce('5').mockReturnValueOnce('3');
+        calculator();
+        expect(window.alert).toHaveBeenCalledWith('The result is 2');
+    });
 
-    alert(`The result is ${result}`);
-}
+    it('multiplies two numbers correctly', () => {
+        window.prompt.mockReturnValueOnce('*').mockReturnValueOnce('5').mockReturnValueOnce('3');
+        calculator();
+        expect(window.alert).toHaveBeenCalledWith('The result is 15');
+    });
 
-calculator();
+    it('divides two numbers correctly', () => {
+        window.prompt.mockReturnValueOnce('/').mockReturnValueOnce('6').mockReturnValueOnce('3');
+        calculator();
+        expect(window.alert).toHaveBeenCalledWith('The result is 2');
+    });
+
+    it('handles division by zero', () => {
+        window.prompt.mockReturnValueOnce('/').mockReturnValueOnce('5').mockReturnValueOnce('0');
+        calculator();
+        expect(window.alert).toHaveBeenCalledWith("You can't divide by zero!");
+    });
+
+    it('handles invalid operators', () => {
+        window.prompt.mockReturnValueOnce('invalid').mockReturnValueOnce('5').mockReturnValueOnce('3');
+        calculator();
+        expect(window.alert).toHaveBeenCalledWith('Invalid operator');
+    });
+});
